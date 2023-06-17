@@ -2,7 +2,7 @@ import requests
 import json
 import os
 import time
-vlistfile=open(f'vlist.json','r')
+vlistfile = open('vlist.json', 'r')
 jtmp=json.loads(vlistfile.read())
 oddir="originalresponse"
 datalist=[]
@@ -17,17 +17,19 @@ for vobj in jtmp:
             f=json.loads(filep.read())
             ftmp=f['_ts_rpc_return_']['data']
     else:
-        while(1):
+        while 1:
             try:
                 time.sleep(0.5)
-                f=requests.get(f'https://api.live.bilibili.com/xlive/fuxi-interface/BlsSummerSingle2023Controller/actInitial?_ts_rpc_args_=[{str(uid)},22603245]').json()
+                f = requests.get(
+                    f'https://api.live.bilibili.com/xlive/fuxi-interface/BlsSummerSingle2023Controller/actInitial?_ts_rpc_args_=[{uid},22603245]'
+                ).json()
                 ftmp=f['_ts_rpc_return_']['data']
             except Exception:
                 print('等待五秒并重试')
                 time.sleep(5)
                 print('等待结束，重试')
             else: break
-    
+
     vdata={
         "guildInfo":ftmp["guildInfo"],
         "time":ftmp["time"],
@@ -47,7 +49,7 @@ for vobj in jtmp:
     if(vcount>0 and vcount%100==0):
         print(f'{vcount}complete!')
 
-with open(f'allv.json','w+', encoding='utf-8') as filep:
+with open('allv.json', 'w+', encoding='utf-8') as filep:
     json.dump(datalist,filep,ensure_ascii=False)
 print(vcount)
 exit()
